@@ -3,6 +3,11 @@ var expressLayouts = require("express-ejs-layouts");
 const bodyParser = require("body-parser");
 const app = express();
 const db = require("./queries");
+const passport = require("passport");
+const session = require("express-session");
+const UserDetails = require("./userDetails");
+const routes = require("./routes/router");
+require("dotenv").config();
 const port = 3000;
 
 app.use(expressLayouts);
@@ -14,6 +19,16 @@ app.use(
     extended: true,
   })
 );
+
+// Set up Passport
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.use(UserDetails.createStrategy());
+passport.serializeUser(UserDetails.serializeUser());
+passport.deserializeUser(UserDetails.deserializeUser());
+
+UserDetails.register({ username: "nemo", active: false }, "123");
 
 app.get("/", (request, response) => {
   response.json({ info: "Node.js, Express, and Postgres API" });
