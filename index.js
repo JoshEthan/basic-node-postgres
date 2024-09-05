@@ -1,9 +1,13 @@
 const express = require("express");
+var expressLayouts = require("express-ejs-layouts");
 const bodyParser = require("body-parser");
 const app = express();
 const db = require("./queries");
 const port = 3000;
 
+app.use(expressLayouts);
+app.set("layout", "./layout/main");
+app.set("view engine", "ejs");
 app.use(bodyParser.json());
 app.use(
   bodyParser.urlencoded({
